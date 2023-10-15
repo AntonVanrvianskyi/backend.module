@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authRouter = void 0;
+const express_1 = require("express");
+const middlewares_1 = require("../middlewares");
+const controllers_1 = require("../controllers");
+const validators_1 = require("../validators");
+const enums_1 = require("../enums");
+const router = (0, express_1.Router)();
+router.post("/register", middlewares_1.commonMiddleware.bodyValid(validators_1.UserValidator.authValidator), controllers_1.authController.register);
+router.post("/login", middlewares_1.commonMiddleware.bodyValid(validators_1.UserValidator.authValidator), middlewares_1.authMiddleware.checkedUser, controllers_1.authController.login);
+router.post("/change-password", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.rolesMiddleware.checkedRoles(enums_1.EUserRoles.Admin), controllers_1.authController.changePassword);
+router.post("/refresh", middlewares_1.authMiddleware.checkRefreshToken, controllers_1.authController.refresh);
+router.post("/create-manager", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.rolesMiddleware.checkedRoles(enums_1.EUserRoles.Admin), middlewares_1.commonMiddleware.bodyValid(validators_1.UserValidator.authValidator), controllers_1.authController.createManager);
+router.post("/buy-account", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.commonMiddleware.bodyValid(validators_1.UserValidator.buyPremium), controllers_1.authController.buyAccount);
+exports.authRouter = router;

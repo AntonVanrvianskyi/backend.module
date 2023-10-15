@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.carRouter = void 0;
+const express_1 = require("express");
+const controllers_1 = require("../controllers");
+const middlewares_1 = require("../middlewares");
+const enums_1 = require("../enums");
+const router = (0, express_1.Router)();
+router.get("/brands", controllers_1.carController.getBrand);
+router.get("/models/:brandId", middlewares_1.commonMiddleware.isIdValid, controllers_1.carController.getModel);
+router.post("/create", middlewares_1.authMiddleware.checkAccessToken, middlewares_1.rolesMiddleware.checkedRoles(enums_1.EUserRoles.Admin), controllers_1.carController.createCar);
+exports.carRouter = router;
